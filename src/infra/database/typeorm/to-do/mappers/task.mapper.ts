@@ -11,4 +11,7 @@ export class TaskMapper {
       updatedAt: task.updatedAt,
     });
   }
+  static toEntityArray(tasks: Task[]): Entity[] {
+    return tasks.map((task) => this.toEntity(task));
+  }
 }

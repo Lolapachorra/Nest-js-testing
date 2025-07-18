@@ -12,7 +12,10 @@ export class CreateTaskUseCase {
   ) {}
 
   async execute(createTaskDto: CreateTaskDTOS): Promise<Task> {
-    const task = Task.create(createTaskDto);
-    return await this.repository.createTask(task);
+    const taskInstance = Task.create(createTaskDto);
+
+    const task = await this.repository.createTask(taskInstance);
+
+    return task;
   }
 }
