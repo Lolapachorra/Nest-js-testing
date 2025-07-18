@@ -3,15 +3,12 @@ import { ITaskRepository } from '@/domain/task/repositories/task.repository';
 import { Repository } from 'typeorm';
 import { Task as ORMTask } from '../entities/task';
 import { toDo } from '../connection';
-import { DatabaseError } from '@/domain/shared/errors/database.error';
 import { TaskMapper } from '../mappers/task.mapper';
+import { DatabaseException } from '@/domain/shared/errors/database-custom.error';
 
 export class TaskTypeormRepository implements ITaskRepository {
   private readonly repo: Repository<ORMTask>;
   constructor() {
-    if (!toDo.isInitialized) {
-      throw new Error('DataSource not initialized');
-    }
     this.repo = toDo.getRepository(ORMTask);
   }
 
@@ -33,7 +30,37 @@ export class TaskTypeormRepository implements ITaskRepository {
         error = e;
       }
 
-      throw new DatabaseError('Falha ao criar task', error);
+      throw new DatabaseException('Falha ao criar task', error);
+    }
+  }
+  async deleteTask(taskId: number): Promise<void> {
+    try {
+      await this.repo.delete({ id: taskId });
+    } catch (e) {
+      let error: Error | undefined = undefined;
+
+      if (e instanceof Error) {
+        error = e;
+      }
+
+      throw new DatabaseException('Falha ao deletar task', error);
+    }
+  }
+  async findTaskById(taskId: number): Promise<DomainTask | null> {
+    try {
+      const task = await this.repo.findOne({ where: { id: taskId } });
+
+      if (!task) return null;
+
+      return TaskMapper.toEntity(task);
+    } catch (e) {
+      let error: Error | undefined = undefined;
+
+      if (e instanceof Error) {
+        error = e;
+      }
+
+      throw new DatabaseException('Falha ao deletar task', error);
     }
   }
 }
