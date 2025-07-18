@@ -1,6 +1,6 @@
 import { Task as DomainTask } from '@/domain/task/entities/task.entity';
 import { ITaskRepository } from '@/domain/task/repositories/task.repository';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Task as ORMTask } from '../entities/task';
 import { toDo } from '../connection';
 import { TaskMapper } from '../mappers/task.mapper';
@@ -62,5 +62,16 @@ export class TaskTypeormRepository implements ITaskRepository {
 
       throw new DatabaseException('Falha ao deletar task', error);
     }
+  }
+  async getTasks(ids?: number[]): Promise<DomainTask[]> {
+    let tasks: ORMTask[];
+
+    if (ids) {
+      tasks = await this.repo.find({ where: { id: In(ids) } });
+      return TaskMapper.toEntityArray(tasks);
+    }
+
+    tasks = await this.repo.find();
+    return TaskMapper.toEntityArray(tasks);
   }
 }
