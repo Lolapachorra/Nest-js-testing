@@ -60,7 +60,7 @@ export class TaskTypeormRepository implements ITaskRepository {
         error = e;
       }
 
-      throw new DatabaseException('Falha ao deletar task', error);
+      throw new DatabaseException('Falha ao achar task', error);
     }
   }
   async getTasks(ids?: number[]): Promise<DomainTask[]> {
@@ -73,5 +73,20 @@ export class TaskTypeormRepository implements ITaskRepository {
 
     tasks = await this.repo.find();
     return TaskMapper.toEntityArray(tasks);
+  }
+
+  async updateTask(id: number, task: DomainTask): Promise<void> {
+    try {
+      await this.repo.update(id, {
+        title: task.title,
+        description: task.description,
+      });
+    } catch (e) {
+      let error: Error | undefined = undefined;
+      if (e instanceof Error) {
+        error = e;
+      }
+      throw new DatabaseException('Falha ao atualizar task', error);
+    }
   }
 }
