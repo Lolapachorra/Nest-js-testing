@@ -13,6 +13,12 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
+    const expressApp = app.getHttpAdapter().getInstance();
+    expressApp.get('/', (_req: any, res: { send: (arg0: string) => any }) =>
+      res.send('Hello World!'),
+    );
+
     await app.init();
   });
 

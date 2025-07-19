@@ -11,13 +11,10 @@ export class DeleteTaskUseCase {
   async execute(taskId: number): Promise<void> {
     const existingTask = await this.repository.findTaskById(taskId);
 
-    if (!existingTask) {
+    if (!existingTask || !existingTask.id) {
       throw new NotFoundException('Não foi encontrada task com esse id');
     }
 
-    if (!existingTask.id) {
-      throw new NotFoundException('Id invalido');
-    }
     await this.repository.deleteTask(existingTask.id);
   }
 }
