@@ -1,9 +1,7 @@
-import {
-  CreateTaskUseCase,
-  DeleteTaskUseCase,
-  GetTaskUseCase,
-  UpdateTaskUseCase,
-} from '@/application/task/use-cases';
+// src/modules/task.module.ts
+import { CreateTaskUseCase } from '@/application/task/use-cases/create-task.usecase';
+import { DeleteTaskUseCase } from '@/application/task/use-cases/delete-task.usecase';
+import { GetTaskUseCase } from '@/application/task/use-cases/get-task.usecase';
 import { TaskController } from '@/infra/controller/task/task.controller';
 import { TaskTypeormRepository } from '@/infra/database/typeorm/to-do/repositories/task-typeorm.repository';
 import { Module } from '@nestjs/common';
@@ -19,14 +17,8 @@ import { Module } from '@nestjs/common';
     CreateTaskUseCase,
     DeleteTaskUseCase,
     GetTaskUseCase,
-    UpdateTaskUseCase,
     // use-case injetado
   ],
-  exports: [
-    CreateTaskUseCase,
-    DeleteTaskUseCase,
-    GetTaskUseCase,
-    UpdateTaskUseCase,
-  ], // permite que o app.module ou outros módulos usem
+  exports: [CreateTaskUseCase, DeleteTaskUseCase, GetTaskUseCase], // permite que o app.module ou outros módulos usem
 })
 export class TaskModule {}
