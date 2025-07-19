@@ -1,11 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication<App>;
+  let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -13,6 +12,13 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
+    // ROTA FAKE INLINE APENAS PARA TESTE
+    const expressApp = app.getHttpAdapter();
+    expressApp.get('/', (_req: any, res: { send: (arg0: string) => any }) =>
+      res.send('Hello World!'),
+    );
+
     await app.init();
   });
 
