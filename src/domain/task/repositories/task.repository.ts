@@ -5,5 +5,4 @@ export interface ITaskRepository {
   deleteTask(taskId: number): Promise<void>;
   findTaskById(taskId: number): Promise<Task | null>;
   getTasks(ids?: number[]): Promise<Task[]>;
-  updateTask(id: number, task: Task): Promise<void>;
 }
